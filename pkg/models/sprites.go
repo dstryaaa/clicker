@@ -1,6 +1,6 @@
 package models
 
-func Create() (PSprite, Weapon, Weapon, Weapon, Weapon, LevelUp, LevelUp, LevelUp, LevelUp) {
+func Create() (*PSprite, *Weapon, *Weapon, *Weapon, *Weapon, *LevelUp, *LevelUp, *LevelUp, *LevelUp) {
 	playerSprite := &PSprite{
 		Image:     PlayerSprite,
 		X:         50,
@@ -109,5 +109,5 @@ func Create() (PSprite, Weapon, Weapon, Weapon, Weapon, LevelUp, LevelUp, LevelU
 		IsClicked:    false,
 		Quantity:     0,
 	}
-	return *playerSprite, *daggerSprite, *swordSprite, *axeSprite, *bowSprite, *daggerUp, *swordUp, *axeUp, *bowUp
+	return playerSprite, daggerSprite, swordSprite, axeSprite, bowSprite, daggerUp, swordUp, axeUp, bowUp
 }

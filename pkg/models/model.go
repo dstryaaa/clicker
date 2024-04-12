@@ -57,6 +57,7 @@ func init() {
 
 type Sprite interface {
 	Draw(screen *ebiten.Image)
+	Update()
 }
 
 type PSprite struct {
@@ -100,15 +101,15 @@ var BowSprite, _, _ = ebitenutil.NewImageFromFile("static/assets/bow.png")
 var LevelUpSprite, _, _ = ebitenutil.NewImageFromFile("static/assets/arrow.png")
 
 type Game struct {
-	PlayerSprite   *PSprite
-	DaggerSprite   *Weapon
-	SwordSprite    *Weapon
-	AxeSprite      *Weapon
-	BowSprite      *Weapon
-	DaggerUpSprite *LevelUp
-	SwordUpSprite  *LevelUp
-	AxeUpSprite    *LevelUp
-	BowUpSprite    *LevelUp
+	PS  *PSprite
+	DS  *Weapon
+	SS  *Weapon
+	AS  *Weapon
+	BS  *Weapon
+	DUS *LevelUp
+	SUS *LevelUp
+	AUS *LevelUp
+	BUS *LevelUp
 }
 
 func (lu *LevelUp) Update() error {
@@ -126,6 +127,7 @@ func (lu *LevelUp) Update() error {
 
 		// Если расстояние меньше или равно радиусу спрайта, считаем клик в пределах спрайта
 		if distance <= lu.Width/2 {
+			fmt.Println(lu.Name, lu.IsClicked, Gold, lu.Cost, lu.Quantity, lu.LinkedWeapon.Name, lu.LinkedWeapon.Quantity)
 			if !lu.IsClicked && Gold >= int(lu.Cost) && lu.Quantity < 3 {
 
 				if lu.Quantity == 0 && lu.LinkedWeapon.Quantity >= 10 {
@@ -182,6 +184,7 @@ func (s *Weapon) Update() error {
 				s.Quantity++
 				s.SpriteClickedStartTime = time.Now()
 				s.IsClicked = true
+				fmt.Println(s.Quantity)
 			}
 		} else {
 			s.IsClicked = false
@@ -222,39 +225,39 @@ func (s *PSprite) Update() error {
 }
 
 func (g *Game) Update() error {
-	err := g.PlayerSprite.Update()
+	err := g.PS.Update()
 	if err != nil {
 		return err
 	}
-	err = g.DaggerSprite.Update()
+	err = g.DS.Update()
 	if err != nil {
 		return err
 	}
-	err = g.SwordSprite.Update()
+	err = g.SS.Update()
 	if err != nil {
 		return err
 	}
-	err = g.AxeSprite.Update()
+	err = g.AS.Update()
 	if err != nil {
 		return err
 	}
-	err = g.BowSprite.Update()
+	err = g.BS.Update()
 	if err != nil {
 		return err
 	}
-	err = g.DaggerUpSprite.Update()
+	err = g.DUS.Update()
 	if err != nil {
 		return err
 	}
-	err = g.SwordUpSprite.Update()
+	err = g.SUS.Update()
 	if err != nil {
 		return err
 	}
-	err = g.AxeUpSprite.Update()
+	err = g.AUS.Update()
 	if err != nil {
 		return err
 	}
-	err = g.BowUpSprite.Update()
+	err = g.BUS.Update()
 	if err != nil {
 		return err
 	}
@@ -269,20 +272,20 @@ func (g *Game) Update() error {
 		// fmt.Println("once per second ", g.DaggerUpSprite.Quantity, g.DaggerUpSprite.Cost)
 		GoldTime = time.Now()
 	}
-	PassiveDamage = g.DaggerSprite.FullDamage + g.SwordSprite.FullDamage + g.AxeSprite.FullDamage + g.BowSprite.FullDamage
+	PassiveDamage = g.DS.FullDamage + g.SS.FullDamage + g.AS.FullDamage + g.BS.FullDamage
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.PlayerSprite.Draw(screen)
-	g.DaggerSprite.Draw(screen)
-	g.SwordSprite.Draw(screen)
-	g.AxeSprite.Draw(screen)
-	g.BowSprite.Draw(screen)
-	g.DaggerUpSprite.Draw(screen)
-	g.SwordUpSprite.Draw(screen)
-	g.AxeUpSprite.Draw(screen)
-	g.BowUpSprite.Draw(screen)
+	g.PS.Draw(screen)
+	g.DS.Draw(screen)
+	g.SS.Draw(screen)
+	g.AS.Draw(screen)
+	g.BS.Draw(screen)
+	g.DUS.Draw(screen)
+	g.SUS.Draw(screen)
+	g.AUS.Draw(screen)
+	g.BUS.Draw(screen)
 }
 func (lu *LevelUp) Draw(screen *ebiten.Image) {
 	msg := fmt.Sprintf("%s's upgrade\nlevel: %d.\nCost : %.2f", lu.LinkedWeapon.Name, lu.Quantity, lu.Cost)
