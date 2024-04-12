@@ -114,7 +114,6 @@ type Game struct {
 
 func (lu *LevelUp) Update() error {
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		// s.Width, s.Height = s.Width*0.05, s.Height*0.05
 		mX, mY := ebiten.CursorPosition()
 		mouseX, mouseY := float64(mX), float64(mY)
 
@@ -127,7 +126,6 @@ func (lu *LevelUp) Update() error {
 
 		// Если расстояние меньше или равно радиусу спрайта, считаем клик в пределах спрайта
 		if distance <= lu.Width/2 {
-			fmt.Println(lu.Name, lu.IsClicked, Gold, lu.Cost, lu.Quantity, lu.LinkedWeapon.Name, lu.LinkedWeapon.Quantity)
 			if !lu.IsClicked && Gold >= int(lu.Cost) && lu.Quantity < 3 {
 
 				if lu.Quantity == 0 && lu.LinkedWeapon.Quantity >= 10 {
@@ -164,7 +162,6 @@ func (lu *LevelUp) Update() error {
 
 func (s *Weapon) Update() error {
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		// s.Width, s.Height = s.Width*0.05, s.Height*0.05
 		mX, mY := ebiten.CursorPosition()
 		mouseX, mouseY := float64(mX), float64(mY)
 
@@ -184,7 +181,6 @@ func (s *Weapon) Update() error {
 				s.Quantity++
 				s.SpriteClickedStartTime = time.Now()
 				s.IsClicked = true
-				fmt.Println(s.Quantity)
 			}
 		} else {
 			s.IsClicked = false
@@ -264,12 +260,6 @@ func (g *Game) Update() error {
 	if time.Since(GoldTime) >= 1*time.Second {
 		Gold += PassiveDamage
 		CurrentHp -= PassiveDamage
-		// fmt.Println("passive damage: ", passiveDamage)
-		// fmt.Printf("cost of the weapon %s : %f \n", g.DaggerSprite.Name, g.DaggerSprite.Cost)
-		// fmt.Printf("quantity of the weapon %s : %d\n", g.SwordSprite.Name, g.SwordSprite.Quantity)
-		// fmt.Printf("quantity of the weapon %s : %d\n", g.AxeSprite.Name, g.AxeSprite.Quantity)
-		// fmt.Printf("quantity of the weapon %s : %d\n", g.BowSprite.Name, g.BowSprite.Quantity)
-		// fmt.Println("once per second ", g.DaggerUpSprite.Quantity, g.DaggerUpSprite.Cost)
 		GoldTime = time.Now()
 	}
 	PassiveDamage = g.DS.FullDamage + g.SS.FullDamage + g.AS.FullDamage + g.BS.FullDamage
@@ -291,9 +281,6 @@ func (lu *LevelUp) Draw(screen *ebiten.Image) {
 	msg := fmt.Sprintf("%s's upgrade\nlevel: %d.\nCost : %.2f", lu.LinkedWeapon.Name, lu.Quantity, lu.Cost)
 	if lu.Quantity >= 0 && lu.Quantity < 3 {
 		opts := &ebiten.DrawImageOptions{}
-		// txtopts := &text.DrawOptions{}
-		// txtopts.GeoM.Translate(lu.X, lu.Y+45)
-		// txtopts.ColorScale.Scale(0, 0, 0, 0)
 
 		text.Draw(screen, msg, TtfFont, int(lu.X), int(lu.Y)+45, color.White)
 		opts.GeoM.Translate(lu.X, lu.Y)
@@ -366,9 +353,6 @@ func (s *PSprite) Draw(screen *ebiten.Image) {
 	} else {
 		text.Draw(screen, "you won!!!", TtfFont, ScreenWidth/2, ScreenHeight/2, color.RGBA{0, 255, 0, 255})
 	}
-	// Draw the HP bar with the current health
-
-	// vector.DrawFilledCircle(screen, float32(s.X+s.Width/2), float32(s.Y+s.Height/2), float32(5), color.RGBA{111, 2, 2, 2}, true)
 
 	msg := fmt.Sprintf("gold: %d", Gold)
 	text.Draw(screen, msg, TtfFont, 12, 36, color.White)
